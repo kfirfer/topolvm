@@ -68,6 +68,7 @@ controller:
     limits:
       memory: "200Mi"
       cpu: "200m"
+
   strategy:
     rollingUpdate:
       maxSurge: 50%
@@ -87,6 +88,7 @@ controller:
   tolerations: []
 
 # Whether to create storageclass
+# ref: https://kubernetes.io/docs/concepts/storage/storage-classes/
 storageclass:
   create: true
   # Default storage class for dynamic volume provisioning
