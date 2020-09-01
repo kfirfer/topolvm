@@ -55,6 +55,7 @@ storageclass:
   defaultclass: true
   # Additional annotations
   annotations: {}
+  # ext4 / xfs / btrfs
   fstype: "xfs"
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
