@@ -1,0 +1,54 @@
+image:
+  repository: quay.io/topolvm/topolvm
+  tag: 0.5.3
+  pullPolicy: IfNotPresent
+
+controller:
+  replicaCount: 1
+  terminationGracePeriodSeconds: 5
+  resources:
+    requests:
+      memory: "50Mi"
+      cpu: "50m"
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+
+scheduler:
+  # If you run with a managed control plane (such as GKE, AKS, etc), topolvm-scheduler should be deployed as Deployment and Service
+  # topolvm-scheduler should otherwise be deployed as DaemonSet in unmanaged (i.e. bare metal) deployments
+  type: daemonset  # possible values:  daemonset/deployment
+  terminationGracePeriodSeconds: 5
+  resources:
+    requests:
+      memory: "50Mi"
+      cpu: "50m"
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+  options:
+    listen:
+      host: localhost
+      port: 9251
+
+storageclass:
+  create: true
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  fstype: "xfs"
+  allowVolumeExpansion: true
+  volumeBindingMode: WaitForFirstConsumer
+
+securityContext:
+  runAsUser:  10000
+  runAsGroup: 10000
+
+podSecurityPolicy:
+  create: true
+
+crd:
+  create: true
