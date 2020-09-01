@@ -3,6 +3,52 @@ image:
   tag: 0.5.3
   pullPolicy: IfNotPresent
 
+# A scheduler extender for TopoLVM
+scheduler:
+  # If you run with a managed control plane (such as GKE, AKS, etc), topolvm-scheduler should be deployed as Deployment and Service
+  # topolvm-scheduler should otherwise be deployed as DaemonSet in unmanaged (i.e. bare metal) deployments
+  # possible values:  daemonset/deployment
+  type: daemonset
+  # Use only if you choose `scheduler.type` deployment
+  deployment:
+    replicaCount: 2
+    strategy:
+      rollingUpdate:
+        maxSurge: 50%
+        maxUnavailable: 50%
+    tolerations: []
+
+  # Use only if you choose `scheduler.type` daemonset
+  daemonset:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/master
+                  operator: Exists
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+
+
+  terminationGracePeriodSeconds: 10
+  ## Define resources requests and limits for single Pods.
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    requests:
+      memory: "50Mi"
+      cpu: "50m"
+    limits:
+      memory: "200Mi"
+      cpu: "200m"
+  options:
+    listen:
+      host: localhost
+      port: 9251
+
 # CSI node service
 node:
   metrics:
@@ -13,6 +59,8 @@ node:
 controller:
   replicaCount: 2
   terminationGracePeriodSeconds: 10
+  ## Define resources requests and limits for single Pods.
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   resources:
     requests:
       memory: "50Mi"
@@ -25,27 +73,18 @@ controller:
       maxSurge: 50%
       maxUnavailable: 50%
 
-# A scheduler extender for TopoLVM
-scheduler:
-  # If you run with a managed control plane (such as GKE, AKS, etc), topolvm-scheduler should be deployed as Deployment and Service
-  # topolvm-scheduler should otherwise be deployed as DaemonSet in unmanaged (i.e. bare metal) deployments
-  # possible values:  daemonset/deployment
-  type: daemonset
-  # Use only if you choose `scheduler.type` deployment
-  deployment:
-    replicaCount: 2
-  terminationGracePeriodSeconds: 10
-  resources:
-    requests:
-      memory: "50Mi"
-      cpu: "50m"
-    limits:
-      memory: "200Mi"
-      cpu: "200m"
-  options:
-    listen:
-      host: localhost
-      port: 9251
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - controller
+          topologyKey: "kubernetes.io/hostname"
+
+  tolerations: []
 
 # Whether to create storageclass
 storageclass:

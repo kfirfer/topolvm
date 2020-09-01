@@ -19,16 +19,10 @@ spec:
         app.kubernetes.io/name: controller
     spec:
       terminationGracePeriodSeconds: {{ .Values.controller.terminationGracePeriodSeconds }}
+      {{- with .Values.controller.affinity }}
       affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                      - controller
-              topologyKey: "kubernetes.io/hostname"
+{{ toYaml . | indent 8 }}
+      {{- end }}
       securityContext:
 {{ toYaml .Values.securityContext | indent 8 }}
       serviceAccountName: controller
@@ -96,7 +90,6 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /run/topolvm
-
         - name: liveness-probe
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command:
@@ -111,3 +104,7 @@ spec:
         - name: certs
           secret:
             secretName: mutatingwebhook
+     {{- with .Values.controller.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

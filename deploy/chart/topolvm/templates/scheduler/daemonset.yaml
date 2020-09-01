@@ -35,18 +35,14 @@ spec:
           resources:
 {{ toYaml .Values.scheduler.resources | indent 12 }}
       hostNetwork: true
+      {{- with .Values.scheduler.daemonset.tolerations }}
       tolerations:
-        - key: CriticalAddonsOnly
-          operator: Exists
-        - effect: NoSchedule
-          key: node-role.kubernetes.io/master
+{{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- with .Values.scheduler.daemonset.affinity }}
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-              - matchExpressions:
-                  - key: node-role.kubernetes.io/master
-                    operator: Exists
+{{ toYaml . | indent 8 }}
+      {{- end }}
       volumes:
         - name: scheduler-options
           configMap:
