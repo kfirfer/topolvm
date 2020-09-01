@@ -6,7 +6,7 @@ metadata:
   labels:
   {{- include "topolvm.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.scheduler.replicaCount }}
+  replicas: {{ .Values.scheduler.deployment.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: topolvm-scheduler
@@ -21,7 +21,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.scheduler.terminationGracePeriodSeconds }}
       containers:
         - name: topolvm-scheduler
-          image: quay.io/topolvm/topolvm:latest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           command:
             - /topolvm-scheduler
             - --config=/etc/topolvm/scheduler-options.yaml
