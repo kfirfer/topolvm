@@ -13,6 +13,7 @@
 .#*
 \#*#
 /.vscode
+.idea/
 
 # ignore go.sum
 /go.sum
@@ -26,4 +27,3 @@
 /e2e/build
 /e2e/tmpbin
 
-.idea/
