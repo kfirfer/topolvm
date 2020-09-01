@@ -11,8 +11,8 @@ node:
 
 # CSI controller service
 controller:
-  replicaCount: 1
-  terminationGracePeriodSeconds: 5
+  replicaCount: 2
+  terminationGracePeriodSeconds: 10
   resources:
     requests:
       memory: "50Mi"
@@ -34,7 +34,7 @@ scheduler:
   # Use only if you choose `scheduler.type` deployment
   deployment:
     replicaCount: 2
-  terminationGracePeriodSeconds: 5
+  terminationGracePeriodSeconds: 10
   resources:
     requests:
       memory: "50Mi"
@@ -50,8 +50,8 @@ scheduler:
 # Whether to create storageclass
 storageclass:
   create: true
-  # Default storageclass for dynamic volume provisioning
-  # Can read more about here https://kubernetes.io/docs/concepts/storage/dynamic-provisioning
+  # Default storage class for dynamic volume provisioning
+  # ref: https://kubernetes.io/docs/concepts/storage/dynamic-provisioning
   defaultclass: true
   # Additional annotations
   annotations: {}
@@ -59,10 +59,14 @@ storageclass:
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer
 
+# Container Security Context
+# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 securityContext:
   runAsUser:  10000
   runAsGroup: 10000
 
+# Enable pod security policy
+# ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 podSecurityPolicy:
   create: true
 
