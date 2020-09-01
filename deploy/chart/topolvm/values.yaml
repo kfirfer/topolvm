@@ -21,7 +21,10 @@ controller:
 scheduler:
   # If you run with a managed control plane (such as GKE, AKS, etc), topolvm-scheduler should be deployed as Deployment and Service
   # topolvm-scheduler should otherwise be deployed as DaemonSet in unmanaged (i.e. bare metal) deployments
-  type: daemonset  # possible values:  daemonset/deployment
+  # possible values:  daemonset/deployment
+  type: daemonset
+  # Use only if you choose `scheduler.type` deployment
+  replicaCount: 2
   terminationGracePeriodSeconds: 5
   resources:
     requests:
@@ -35,10 +38,14 @@ scheduler:
       host: localhost
       port: 9251
 
+# Whether to create storageclass
 storageclass:
   create: true
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
+  # Default storageclass for dynamic volume provisioning
+  # Can read more about here https://kubernetes.io/docs/concepts/storage/dynamic-provisioning
+  defaultclass: true
+  # Additional annotations
+  annotations: {}
   fstype: "xfs"
   allowVolumeExpansion: true
   volumeBindingMode: WaitForFirstConsumer

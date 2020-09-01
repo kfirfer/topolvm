@@ -3,8 +3,9 @@ kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: topolvm-provisioner
-  {{- with .Values.storageclass.annotations }}
   annotations:
+    storageclass.kubernetes.io/is-default-class: {{ .Values.storageclass.defaultclass | quote }}
+  {{- with .Values.storageclass.annotations }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:

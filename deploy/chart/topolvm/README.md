@@ -18,7 +18,7 @@ kubectl apply -f deploy/chart/topolvm/namespace.yaml
 To install the chart with the release name `topolvm` using a dedicated namespace(recommended):
 
 ```sh
-helm upgrade -i --name topolvm deploy/chart/topolvm --namespace=topolvm-system
+helm upgrade -i topolvm deploy/chart/topolvm --namespace=topolvm-system
 ```
 
 The chart can be customized using the following configurable parameters:
@@ -36,6 +36,6 @@ Specify parameters using `--set key=value[,key=value]` argument to `helm install
 Alternatively a YAML file that specifies the values for the parameters can be provided like this:
 
 ```sh
-helm install --name topolvm -f values.yaml deploy/chart/topolvm
+helm upgrade -i topolvm -f values.yaml deploy/chart/topolvm
 ```
 
