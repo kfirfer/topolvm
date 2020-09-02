@@ -21,6 +21,10 @@ scheduler:
   #    maxUnavailable: 1
   #  type: RollingUpdate
 
+  # minReadySeconds
+  ##
+  minReadySeconds: 0
+
   ## Affinity and anti-affinity
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
   ##
@@ -97,6 +101,10 @@ controller:
     rollingUpdate:
       maxSurge: 50%
       maxUnavailable: 50%
+
+  # minReadySeconds
+  ##
+  minReadySeconds: 0
 
   ## Affinity and anti-affinity
   ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity

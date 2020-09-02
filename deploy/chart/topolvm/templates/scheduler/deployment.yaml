@@ -9,6 +9,7 @@ spec:
   replicas: {{ .Values.scheduler.deployment.replicaCount }}
   strategy:
 {{ toYaml .Values.scheduler.updateStrategy | indent 4 }}
+  minReadySeconds: {{ .Values.scheduler.minReadySeconds }}
   selector:
     matchLabels:
       app.kubernetes.io/name: topolvm-scheduler
