@@ -7,9 +7,7 @@ metadata:
 spec:
   replicas: {{ .Values.controller.replicaCount }}
   strategy:
-    rollingUpdate:
-      maxSurge: {{ .Values.controller.strategy.rollingUpdate.maxSurge }}
-      maxUnavailable: {{ .Values.controller.strategy.rollingUpdate.maxUnavailable }}
+{{ toYaml .Values.controller.updateStrategy | indent 4 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: controller
@@ -107,4 +105,8 @@ spec:
      {{- with .Values.controller.tolerations }}
       tolerations:
 {{ toYaml . | indent 8 }}
+    {{- end }}
+     {{- if .Values.controller.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.controller.nodeSelector | indent 8 }}
     {{- end }}
